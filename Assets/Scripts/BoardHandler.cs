@@ -7,7 +7,7 @@ public class BoardHandler : MonoBehaviour
 {
 
     private GameManager GameManager; 
-
+    public int HitPoints; 
 
     /// <summary>
     /// Variables for handling player interaction/information. 
@@ -18,11 +18,9 @@ public class BoardHandler : MonoBehaviour
     /// <summary>
     /// Variables for handling card placements. 
     /// </summary>
-    private List<Vector3> CardSlotsPos = new List<Vector3>();  
+    private List<GameObject> CardSlotsPos = new List<GameObject>();  
     public int CardSlots; 
     public GameObject prefab; 
-    private MeshRenderer renderer; 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -36,18 +34,23 @@ public class BoardHandler : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Good enough for now, this will become a problem if the number of card slots is too big, will need to make it account for scaling card slots down. 
+    /// </summary>
     private void SetupBoard()
     {
-        renderer = gameObject.GetComponent<MeshRenderer>();
-        float width = renderer.bounds.size.x; 
-        float spacing = width / (float)CardSlots + 2; 
-        float x = 0 - width/2; 
+        float boardWidth = 1f; 
+        float spacing = boardWidth / ((float)CardSlots + 2f); 
+        float half = (CardSlots +2f) /2f; 
+        float x = 0f - (spacing * half);
         for (int i = 0; i < CardSlots; i++)
         {   
             x = x + spacing; 
-            CardSlotsPos.Add(new Vector3(x, 1f, 0f));
-            GameObject.Instantiate(prefab, CardSlotsPos[i], Quaternion.identity, this.transform); 
-            Debug.Log("Test Spawn " + CardSlotsPos[i].ToString());
+            GameObject newPos =  GameObject.Instantiate(prefab, new Vector3(0f, 0f, 0f), Quaternion.identity, this.transform); 
+            // We are instantiating and then moving to asser the localPosition. This may not be optimal(TBD) 
+            newPos.transform.localPosition = new Vector3(x, 0f, this.transform.position.z -1f); 
+            newPos.transform.localScale= new Vector3(0.1f, 0.3f, 0.1f);
+            CardSlotsPos.Add(newPos);
         }
 
     }

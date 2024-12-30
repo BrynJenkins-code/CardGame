@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardHandler : MonoBehaviour
-{   
-     public string cardName; 
+[CreateAssetMenu (fileName ="card", menuName = "Create new card")]
+public class CardInfo : ScriptableObject
+{
+    public string cardName; 
     public string cardDesc; 
     public int manaCost; 
     public int rarity; 
