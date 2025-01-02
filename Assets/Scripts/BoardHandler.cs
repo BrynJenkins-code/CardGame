@@ -55,21 +55,34 @@ public class BoardHandler : MonoBehaviour
 
     }
 
+    public bool CheckIfPlayed(GameObject card)
+    {
+        if (card == null)
+        {
+            return false; 
+        }
+        foreach (GameObject slot in CardSlotsPos)
+        {
+            float distance = Vector2.Distance(card.transform.position, slot.transform.position);
+            
+            if(distance < 60f)
+            {
+                Debug.Log(distance); 
+                return true;
+            }
+        }
+
+        return false; 
+    }
+
     /// <summary>
     /// This method will be used to place a card on the board and check if it has any effects. 
     /// </summary>
     /// <param name="card"></param>
-    public void PlayCard(CardHandler card)
+    public void PlayCard(CardHandler card, int position)
     {
 
     }
     
-    /// <summary>
-    /// This method will be used to handle when a card is drawn. 
-    /// </summary>
-    /// <param name="card"></param>
-    public void CardDrawn(CardHandler card)
-    {
 
-    }
 }
