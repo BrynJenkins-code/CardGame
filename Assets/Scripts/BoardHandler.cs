@@ -61,13 +61,15 @@ public class BoardHandler : MonoBehaviour
         {
             return false; 
         }
-        foreach (GameObject slot in CardSlotsPos)
+        for(int i = 0 ; i < CardSlotsPos.Count ; i++)
         {
+            GameObject slot = CardSlotsPos[i];
             float distance = Vector2.Distance(card.transform.position, slot.transform.position);
             
             if(distance < 60f)
             {
                 Debug.Log(distance); 
+                PlayCard(card.GetComponent<CardHandler>(), i);
                 return true;
             }
         }
@@ -80,7 +82,14 @@ public class BoardHandler : MonoBehaviour
     /// </summary>
     /// <param name="card"></param>
     public void PlayCard(CardHandler card, int position)
-    {
+    { 
+        foreach (CardBehaviour cardBehaviour in card.events)
+        {
+            switch (cardBehaviour.type)
+            {
+                
+            }
+        }
 
     }
     
