@@ -4,16 +4,6 @@ using UnityEngine;
 
 public abstract class CardBehaviour : MonoBehaviour
 {
-    public string BehaviourUid; 
-    enum onPlayType
-    {
-        None, 
-        CheckAdjecent, 
-        CheckBoard,
-        CheckHand, 
-        CheckPlayed
-    }
-    public OnPlayType onPlayType;
 
     // Start is called before the first frame update
     void Start()
@@ -31,5 +21,6 @@ public abstract class CardBehaviour : MonoBehaviour
     public abstract void OnDiscard(); 
     public abstract void OnDraw(); 
     public abstract void OnDie(); 
+    public abstract void OnBoardUpdate(CardHandler[] cards); 
 
 }

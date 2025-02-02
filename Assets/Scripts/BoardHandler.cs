@@ -85,10 +85,7 @@ public class BoardHandler : MonoBehaviour
     { 
         foreach (CardBehaviour cardBehaviour in card.events)
         {
-            switch (cardBehaviour.type)
-            {
-                
-            }
+            cardBehaviour.OnPlay(); 
         }
 
     }
