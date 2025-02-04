@@ -25,6 +25,8 @@ public class CardHandler : MonoBehaviour
     private float distance;
     private Vector3 startDist; 
     private Vector3 startPos; 
+
+    //Need to implement some way of this being set automatically. 
     public GameObject Board; 
 
     // Start is called before the first frame update
@@ -78,6 +80,7 @@ public class CardHandler : MonoBehaviour
     private void CheckIfPlayed()
     {    
         bool played = Board.GetComponent<BoardHandler>().CheckIfPlayed(gameObject); 
+        Debug.Log("Test1"); 
         if(!played)
         {
             transform.position = startPos;

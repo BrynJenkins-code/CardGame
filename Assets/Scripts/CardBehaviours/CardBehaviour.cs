@@ -5,16 +5,16 @@ using UnityEngine;
 public abstract class CardBehaviour : MonoBehaviour
 {
 
-    // Start is called before the first frame update
-    void Start()
+    protected CardHandler card;
+    protected virtual void Awake()
     {
-        
+        card = GetComponent<CardHandler>();
+        SubscribeToEvents();
     }
 
-    // Update is called once per frame
-    void Update()
+    protected virtual void OnDestroy()
     {
-        
+        UnsubscribeFromEvents();
     }
 
     public abstract void OnPlay();
@@ -22,5 +22,24 @@ public abstract class CardBehaviour : MonoBehaviour
     public abstract void OnDraw(); 
     public abstract void OnDie(); 
     public abstract void OnBoardUpdate(CardHandler[] cards); 
+
+     // Event handlers for broader game state changes
+    protected virtual void OnTurnStarted() { }
+    protected virtual void OnTurnEnded() { }
+    protected virtual void OnBoardStateChanged(CardHandler[] newState) { }
+
+    private void SubscribeToEvents()
+    {
+        GameEvents.OnTurnStarted += OnTurnStarted;
+        GameEvents.OnTurnEnded += OnTurnEnded;
+        GameEvents.OnBoardStateChanged += OnBoardStateChanged;
+    }
+
+    private void UnsubscribeFromEvents()
+    {
+        GameEvents.OnTurnStarted -= OnTurnStarted;
+        GameEvents.OnTurnEnded -= OnTurnEnded;
+        GameEvents.OnBoardStateChanged -= OnBoardStateChanged;
+    }
 
 }

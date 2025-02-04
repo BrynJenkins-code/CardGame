@@ -51,6 +51,7 @@ public class BoardHandler : MonoBehaviour
             newPos.transform.localPosition = new Vector3(x, 0f, this.transform.position.z -1f); 
             newPos.transform.localScale= new Vector3(0.1f, 0.3f, 0.1f);
             CardSlotsPos.Add(newPos);
+            Debug.Log( CardSlotsPos.Count); 
         }
 
     }
@@ -61,11 +62,12 @@ public class BoardHandler : MonoBehaviour
         {
             return false; 
         }
+        Debug.Log(CardSlotsPos.Count); 
         for(int i = 0 ; i < CardSlotsPos.Count ; i++)
         {
-            GameObject slot = CardSlotsPos[i];
+            GameObject slot = CardSlotsPos[i];   
             float distance = Vector2.Distance(card.transform.position, slot.transform.position);
-            
+            Debug.Log("test 3" + distance); 
             if(distance < 60f)
             {
                 Debug.Log(distance); 
@@ -82,13 +84,11 @@ public class BoardHandler : MonoBehaviour
     /// </summary>
     /// <param name="card"></param>
     public void PlayCard(CardHandler card, int position)
-    { 
-        foreach (CardBehaviour cardBehaviour in card.events)
+    {          
+          foreach (CardBehaviour cardBehaviour in card.events)
         {
             cardBehaviour.OnPlay(); 
         }
-
     }
-    
 
 }
