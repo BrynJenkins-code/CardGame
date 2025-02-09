@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &7480206 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2015724725198471954, guid: a8b1faf01ddbb0a4694f53c5aefc5f1a, type: 3}
-  m_PrefabInstance: {fileID: 405341379}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &330601170
 GameObject:
   m_ObjectHideFlags: 0
@@ -310,12 +305,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 346078113}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd4845c56ac4a5347925e49c8ee2bed9, type: 3}
+  m_Script: {fileID: 11500000, guid: defd557dd9ae93a4982814bc662dd43b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deckName: 
+  cards: []
   HandSize: 5
   prefab: {fileID: 6062753440016442787, guid: ed53063eb1d340d48b1270772e0aba59, type: 3}
-  PlayerBoard: {fileID: 7480206}
+  PlayerBoard: {fileID: 2015724725198471954, guid: a8b1faf01ddbb0a4694f53c5aefc5f1a, type: 3}
 --- !u!1001 &405341379
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -7,12 +7,6 @@ public class BoardHandler : MonoBehaviour
 {
 
     private GameManager GameManager; 
-    public int HitPoints; 
-
-    /// <summary>
-    /// Variables for handling player interaction/information. 
-    /// </summary>
-    private int Health; 
     private Dictionary<string, CardHandler> Hand = new Dictionary<string, CardHandler>();
 
     /// <summary>

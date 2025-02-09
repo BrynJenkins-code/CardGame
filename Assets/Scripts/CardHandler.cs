@@ -28,11 +28,12 @@ public class CardHandler : MonoBehaviour
 
     //Need to implement some way of this being set automatically. 
     public GameObject Board; 
+    public GameObject enemy; 
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        
+        events = new List<CardBehaviour>(GetComponents<CardBehaviour>());
     }
 
     void Update()

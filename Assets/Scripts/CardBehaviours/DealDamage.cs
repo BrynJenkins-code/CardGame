@@ -19,8 +19,7 @@ public class DealDamage : CardBehaviour
 
     public override void OnPlay()
     {
-        Debug.Log("Test"); 
-        throw new System.NotImplementedException();
+        card.enemy.GetComponent<EnemyController>().health -= 10;
     }
 
     public override void OnDiscard()

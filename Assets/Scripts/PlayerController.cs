@@ -7,6 +7,7 @@ using Random = UnityEngine.Random;
 public class PlayerController : MonoBehaviour
 {
     public string deckName;
+    public int health; 
     public List<CardHandler> cards; 
     private List<GameObject> HandSizePos = new List<GameObject>();  
     public int HandSize; 
@@ -14,12 +15,16 @@ public class PlayerController : MonoBehaviour
 
     public GameObject PlayerBoard; 
 
+    // This should be getting set from the game maanger. 
+    public GameObject enemy; 
+
 
     // Start is called before the first frame update
     void Start()
     {
         SetupDeck(); 
-        SetupHand();  
+        SetupHand(); 
+        PlayerBoard = GameObject.FindGameObjectWithTag("PlayerBoard");  
     }
 
     // Update is called once per frame
@@ -80,16 +85,8 @@ public class PlayerController : MonoBehaviour
             newPos.transform.localPosition = new Vector3(x, 0f, this.transform.position.z -1f); 
             newPos.transform.localScale= new Vector3(0.1f, 0.5f, 0.1f);
             newPos.GetComponent<CardHandler>().Board = PlayerBoard; 
+            newPos.GetComponent<CardHandler>().enemy = enemy; 
             HandSizePos.Add(newPos);
         }
-    }
-
-    /// <summary>
-    /// This method will be used to handle when a card is drawn. 
-    /// </summary>
-    /// <param name="card"></param>
-    private void CardDrawn(GameObject card)
-    {
-        
     }
 }
