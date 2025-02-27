@@ -73,19 +73,44 @@ public class PlayerController : MonoBehaviour
     }
     private void SetupHand()
     {
-        float boardWidth = 1f; 
-        float spacing = boardWidth / ((float)HandSize + 2f); 
-        float half = (HandSize +2f) /2f; 
-        float x = 0f - (spacing * half);
+        float handWidth = 0; 
+        if (TryGetComponent<Renderer>(out Renderer renderer))
+        {
+            handWidth = renderer.bounds.size.x;
+        }
+        else
+        {
+            handWidth = 2f; // fallback value
+        }
+        Vector3 originalScale = prefab.transform.localScale;
+                    // Preserve the original aspect ratio while scaling to the new width
+            
+
+        
+        float cardWidth = handWidth / (HandSize * 1.2f);
+        float cardSpacing = cardWidth *1.5f;
+        float scaleMultiplier = cardWidth / originalScale.x;
+
         for (int i = 0; i < HandSize; i++)
         {   
-            x = x + spacing; 
-            GameObject newPos =  GameObject.Instantiate(prefab, new Vector3(0f, 0f, 0f), Quaternion.identity, this.transform); 
-            // We are instantiating and then moving to asser the localPosition. This may not be optimal(TBD) 
-            newPos.transform.localPosition = new Vector3(x, 0f, this.transform.position.z -1f); 
-            newPos.transform.localScale= new Vector3(0.1f, 0.5f, 0.1f);
+            GameObject newPos = GameObject.Instantiate(prefab, new Vector3(0f, 0f, 0f), Quaternion.identity); 
+            
+            newPos.transform.localScale = new Vector3(
+                originalScale.x * scaleMultiplier,
+                originalScale.y * scaleMultiplier,
+                originalScale.z
+            );
+            
+            // Set parent after scaling to avoid any unwanted scale modifications
+            newPos.transform.SetParent(this.transform);
+
+            float xPos = (-handWidth/2 + (i * cardSpacing)) / handWidth;
+            newPos.transform.localPosition = new Vector3(xPos, 0f, -0.1f * i);
+            
             newPos.GetComponent<CardHandler>().Board = PlayerBoard; 
             newPos.GetComponent<CardHandler>().enemy = enemy; 
+            newPos.GetComponent<CardHandler>().localScale = newPos.transform.localScale; 
+
             HandSizePos.Add(newPos);
         }
     }

@@ -30,6 +30,9 @@ public class CardHandler : MonoBehaviour
     public GameObject Board; 
     public GameObject enemy; 
 
+    public Vector3 localScale;
+    private bool played = false;  
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -56,7 +59,14 @@ public class CardHandler : MonoBehaviour
     // ...and the mesh finally turns white when the mouse moves away.
     void OnMouseExit()
     {
-        this.transform.localScale = this.transform.localScale - new Vector3(0.05f, 0.25f, 0);
+        if(played)
+        {
+            this.transform.localScale = new Vector3(1,1,1); 
+        }
+        else
+        {
+            this.transform.localScale = localScale;
+        }
     }
 
     void OnMouseDown()
@@ -80,11 +90,29 @@ public class CardHandler : MonoBehaviour
     /// </summary>
     private void CheckIfPlayed()
     {    
-        bool played = Board.GetComponent<BoardHandler>().CheckIfPlayed(gameObject); 
-        Debug.Log("Test1"); 
-        if(!played)
+        GameObject slot = Board.GetComponent<BoardHandler>().CheckIfPlayed(gameObject); 
+        if(slot != null)
+        {
+            transform.position = slot.transform.position;
+            
+            this.transform.SetParent(slot.transform, false);
+            transform.localPosition = new Vector3(0, 0, -1f); 
+            transform.localScale = new Vector3(1, 1, 1);
+            PlayCard();
+            played = true; 
+
+        }
+        else
         {
             transform.position = startPos;
+        }
+    }
+
+    public void PlayCard()
+    {
+        foreach (CardBehaviour cardBehaviour in events)
+        {
+            cardBehaviour.OnPlay(); 
         }
     }
 }
