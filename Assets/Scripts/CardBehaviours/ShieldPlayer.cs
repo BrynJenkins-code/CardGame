@@ -3,25 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DealDamage : CardBehaviour
+public class ShieldPlayer : CardBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
+    public int shieldAmount; 
 
     public override void OnPlay()
     {
-        card.enemy.GetComponent<EnemyController>().health -= 10;
+        card.player.GetComponent<PlayerController>().shield += shieldAmount; 
         isDone = true; 
     }
 
@@ -42,4 +30,6 @@ public class DealDamage : CardBehaviour
     public override void OnBoardUpdate(CardHandler[] cards)
     {
     }
-}
+    
+}    
+    

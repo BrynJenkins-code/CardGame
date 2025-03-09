@@ -6,6 +6,7 @@ public abstract class CardBehaviour : MonoBehaviour
 {
 
     protected CardHandler card;
+    public bool isDone = false; 
     protected virtual void Awake()
     {
         card = GetComponent<CardHandler>();
@@ -20,7 +21,7 @@ public abstract class CardBehaviour : MonoBehaviour
     public abstract void OnPlay();
     public abstract void OnDiscard(); 
     public abstract void OnDraw(); 
-    public abstract void OnDie(); 
+    public abstract void OnDone(); 
     public abstract void OnBoardUpdate(CardHandler[] cards); 
 
      // Event handlers for broader game state changes
@@ -30,16 +31,12 @@ public abstract class CardBehaviour : MonoBehaviour
 
     private void SubscribeToEvents()
     {
-        GameEvents.OnTurnStarted += OnTurnStarted;
-        GameEvents.OnTurnEnded += OnTurnEnded;
-        GameEvents.OnBoardStateChanged += OnBoardStateChanged;
+        GameEvents.OnBoardStateChanged += OnBoardUpdate;
     }
 
     private void UnsubscribeFromEvents()
     {
-        GameEvents.OnTurnStarted -= OnTurnStarted;
-        GameEvents.OnTurnEnded -= OnTurnEnded;
-        GameEvents.OnBoardStateChanged -= OnBoardStateChanged;
+        GameEvents.OnBoardStateChanged -= OnBoardUpdate;
     }
 
 }

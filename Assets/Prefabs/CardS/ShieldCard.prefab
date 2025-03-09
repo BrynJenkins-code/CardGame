@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bd07dacc8ffacde46a58dbe00280c8e0, type: 2}
+  - {fileID: 2100000, guid: b309900c8a7c26e4d9feb8e961f6dcc3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -336,9 +336,9 @@ GameObject:
   - component: {fileID: 3707799410444567590}
   - component: {fileID: 2564001002506947309}
   - component: {fileID: 4320808526769905180}
-  - component: {fileID: 4374897420863339200}
+  - component: {fileID: 2083304651934162781}
   m_Layer: 0
-  m_Name: Card
+  m_Name: ShieldCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -380,9 +380,11 @@ MonoBehaviour:
   rend: {fileID: 0}
   uid: 0
   events:
-  - {fileID: 4374897420863339200}
+  - {fileID: 2083304651934162781}
   Board: {fileID: 0}
   enemy: {fileID: 0}
+  player: {fileID: 0}
+  localScale: {x: 0, y: 0, z: 0}
 --- !u!61 &4320808526769905180
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -429,7 +431,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1.5}
   m_EdgeRadius: 0.1
---- !u!114 &4374897420863339200
+--- !u!114 &2083304651934162781
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -438,9 +440,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 6062753440016442787}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d2ff480f96cd344bb367629425b3b71, type: 3}
+  m_Script: {fileID: 11500000, guid: ff449877cdaccb24291504a48839cda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDone: 0
+  shieldAmount: 10
 --- !u!1 &6351843846993097422
 GameObject:
   m_ObjectHideFlags: 0

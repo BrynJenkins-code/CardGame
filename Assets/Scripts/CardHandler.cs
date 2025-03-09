@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CardHandler : MonoBehaviour
-{   
-     public string cardName; 
-    public string cardDesc; 
-    public int manaCost; 
-    public int rarity; 
+{
+    public string cardName;
+    public string cardDesc;
+    public int cost;
+    public int rarity;
     public Sprite image;
     public Renderer rend;
 
     //to be assigned when creating a deck.
-    public int uid; 
+    public int uid;
 
     // It may be that these aren't strings, but rather classes. 
     public List<CardBehaviour> events;
@@ -21,22 +21,25 @@ public class CardHandler : MonoBehaviour
     /// <summary>
     /// Input Handling
     /// </summary>
-    private bool dragging = false;  
+    private bool dragging = false;
     private float distance;
-    private Vector3 startDist; 
-    private Vector3 startPos; 
+    private Vector3 startDist;
+    private Vector3 startPos;
 
     //Need to implement some way of this being set automatically. 
-    public GameObject Board; 
-    public GameObject enemy; 
+    public GameObject Board;
+    public GameObject enemy;
+    public GameObject player;
 
     public Vector3 localScale;
-    private bool played = false;  
+    private bool played = false;
 
     // Start is called before the first frame update
     void Awake()
     {
         events = new List<CardBehaviour>(GetComponents<CardBehaviour>());
+        player = GameObject.FindGameObjectWithTag("Player");
+        enemy = GameObject.FindGameObjectWithTag("Enemy");
     }
 
     void Update()
@@ -45,8 +48,12 @@ public class CardHandler : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             Vector3 rayPoint = ray.GetPoint(distance) + startDist;
-            rayPoint.z = transform.position.z; 
+            rayPoint.z = transform.position.z;
             transform.position = rayPoint;
+        }
+        else if (played)
+        {
+            CheckIfDone();
         }
     }
 
@@ -59,9 +66,9 @@ public class CardHandler : MonoBehaviour
     // ...and the mesh finally turns white when the mouse moves away.
     void OnMouseExit()
     {
-        if(played)
+        if (played)
         {
-            this.transform.localScale = new Vector3(1,1,1); 
+            this.transform.localScale = new Vector3(1, 1, 1);
         }
         else
         {
@@ -76,7 +83,7 @@ public class CardHandler : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         Vector3 rayPoint = ray.GetPoint(distance);
         startDist = transform.position - rayPoint;
-        startPos = transform.position; 
+        startPos = transform.position;
     }
 
     void OnMouseUp()
@@ -89,17 +96,17 @@ public class CardHandler : MonoBehaviour
     /// Would like it to snap into the card slot border if possible. Also would be good to highlight card slots when dragging. This is good enough for now. 
     /// </summary>
     private void CheckIfPlayed()
-    {    
-        GameObject slot = Board.GetComponent<BoardHandler>().CheckIfPlayed(gameObject); 
-        if(slot != null)
+    {
+        GameObject slot = Board.GetComponent<BoardHandler>().CheckIfPlayed(gameObject);
+        if (slot != null)
         {
             transform.position = slot.transform.position;
-            
+
             this.transform.SetParent(slot.transform, false);
-            transform.localPosition = new Vector3(0, 0, -1f); 
+            transform.localPosition = new Vector3(0, 0, -1f);
             transform.localScale = new Vector3(1, 1, 1);
             PlayCard();
-            played = true; 
+            played = true;
 
         }
         else
@@ -112,7 +119,25 @@ public class CardHandler : MonoBehaviour
     {
         foreach (CardBehaviour cardBehaviour in events)
         {
-            cardBehaviour.OnPlay(); 
+            cardBehaviour.OnPlay();
         }
+        player.GetComponent<PlayerController>().RemoveCardFromHand(this.transform.gameObject);
+    }
+
+    private void CheckIfDone()
+    {
+        foreach (CardBehaviour cardBehaviour in events)
+        {
+            if (!cardBehaviour.isDone)
+            {
+                return;
+            }
+        }
+        foreach (CardBehaviour cardBehaviour in events)
+        {
+            cardBehaviour.OnDone();
+        }
+        // Need to reimplement this to carry out some form of animation. 
+        Destroy(gameObject);
     }
 }

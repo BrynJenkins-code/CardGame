@@ -87,6 +87,7 @@ public class BoardHandler : MonoBehaviour
             if(distance < minPlayDistance && entry.Value == null)
             {
                 CardSlotsPos[slot] = card.GetComponent<CardHandler>(); 
+                GameEvents.BoardStateChanged(CardSlotsPos.Values.ToArray());
                 return slot;
             }
         }

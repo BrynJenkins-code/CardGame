@@ -2,78 +2,130 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random; 
+using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
 {
-    public string deckName;
-    public int health; 
-    public List<CardHandler> cards; 
-    private List<GameObject> HandSizePos = new List<GameObject>();  
-    public int HandSize; 
-    public GameObject prefab; 
+    [SerializeField] private string deckName;  // Only public if needed by other scripts
 
-    public GameObject PlayerBoard; 
+    private Dictionary<GameObject, int> cards = new Dictionary<GameObject, int>();
 
-    // This should be getting set from the game maanger. 
-    public GameObject enemy; 
+    private List<GameObject> hand = new List<GameObject>();
+    [SerializeField] private int handSize;
+    [SerializeField] private GameObject cardPrefab;  // Renamed for clarity
 
+    [SerializeField] private GameObject playerBoard;
+    [SerializeField] private GameObject enemy;  // Keep public if game manager needs to set it
+
+
+    // Player Stats. 
+    [SerializeField] private int health;
+
+    public int shield;
+
+    // Misc Variables
+    private Vector3 velocity = Vector3.zero;
 
     // Start is called before the first frame update
     void Start()
     {
-        SetupDeck(); 
-        SetupHand(); 
-        PlayerBoard = GameObject.FindGameObjectWithTag("PlayerBoard");  
+        SetupDeck();
+        playerBoard = GameObject.FindGameObjectWithTag("Player");
+        enemy = GameObject.FindGameObjectWithTag("Enemy");
     }
 
     // Update is called once per frame
     void Update()
     {
-        
-    }
 
-    public void SetupDeck()
-    {
-        /*
-            Add something to read the deck from memory. 
-        */
     }
 
     /// <summary>
-    /// Draw a random card from the deck. 
+    /// PUBLIC METHODS. 
     /// </summary>
-    /// <returns>Returns a card handler object of the selected card. </returns>
-    public CardHandler DrawCard()
+    /// 
+    public void DrawCard()
     {
-        int randomVal = Random.Range(0, cards.Count);
-        return cards[randomVal]; 
+        if (hand.Count >= handSize)
+        {
+            return;
+        }
+        GameObject card = SelectCard();
+        if (card != null)
+        {
+            hand.Add(card);
+            RenderHand();
+        }
+    }
+
+    public void RemoveCardFromHand(GameObject card)
+    {
+        if (card != null)
+        {
+            hand.Remove(card);
+            RenderHand();
+        }
     }
 
     /// <summary>
     /// Add a new card to the deck.  
     /// </summary>
     /// <param name="card"> CardHandler Object to add. </param>
-    public void AddCard(CardHandler card)
+    private void AddCardToDeck(GameObject card)
     {
-        card.uid = cards.Count; 
-        cards.Add(card); 
+        if (cards.ContainsKey(card))
+        {
+            cards[card]++;
+        }
+        else
+        {
+            cards.Add(card, 1);
+        }
     }
 
     /// <summary>
     /// Remove a card from the deck. 
     /// </summary>
-    /// <param name="uid"> UID of the card to remove. </param>
-    public void RemoveCard(int uid)
+    /// <param name="card"> CardHandler Object to remove. </param>
+    private void RemoveCardFromDeck(GameObject card)
     {
-        if(cards.Find(x => x.uid == uid) != null)
+        if (cards.ContainsKey(card))
         {
-            cards.Remove(cards.Find(x => x.uid == uid));
+            cards[card]--;
+            if (cards[card] <= 0)
+            {
+                cards.Remove(card);
+            }
         }
     }
-    private void SetupHand()
+
+
+    /// <summary>
+    /// PRIVATE METHODS. 
+    /// </summary>
+    /// 
+    private void SetupDeck()
     {
-        float handWidth = 0; 
+        List<GameObject> deck = this.GetComponent<DeckHandler>().deck;
+        foreach (GameObject card in deck)
+        {
+            // This bit is still a bit hard coded. Make a proper deck slot (So we can also hide the top card. )
+            GameObject newCard = GameObject.Instantiate(card, new Vector3(5f, 5f, 0f), Quaternion.identity);
+            newCard.GetComponent<CardHandler>().Board = playerBoard;
+            newCard.GetComponent<CardHandler>().enemy = enemy;
+
+            AddCardToDeck(newCard);
+        }
+
+        for (int i = 0; i < handSize; i++)
+        {
+            DrawCard();
+        }
+    }
+
+    private void RenderHand()
+    {
+        float handWidth = 0;
         if (TryGetComponent<Renderer>(out Renderer renderer))
         {
             handWidth = renderer.bounds.size.x;
@@ -82,36 +134,54 @@ public class PlayerController : MonoBehaviour
         {
             handWidth = 2f; // fallback value
         }
-        Vector3 originalScale = prefab.transform.localScale;
-                    // Preserve the original aspect ratio while scaling to the new width
-            
-
-        
-        float cardWidth = handWidth / (HandSize * 1.2f);
-        float cardSpacing = cardWidth *1.5f;
+        Vector3 originalScale = cardPrefab.transform.localScale;
+        // Preserve the original aspect ratio while scaling to the new width        
+        float cardWidth = handWidth / (handSize * 1.2f);
+        float cardSpacing = cardWidth * 1.5f;
         float scaleMultiplier = cardWidth / originalScale.x;
 
-        for (int i = 0; i < HandSize; i++)
-        {   
-            GameObject newPos = GameObject.Instantiate(prefab, new Vector3(0f, 0f, 0f), Quaternion.identity); 
-            
-            newPos.transform.localScale = new Vector3(
-                originalScale.x * scaleMultiplier,
-                originalScale.y * scaleMultiplier,
-                originalScale.z
-            );
-            
+        int i = 0;
+        foreach (GameObject currentCard in hand)
+        {
+            ///This bit stopped working for some reason. Maybe fix?
+            // currentCard.transform.localScale = new Vector3(
+            //     originalScale.x * scaleMultiplier,
+            //     originalScale.y * scaleMultiplier,
+            //     originalScale.z
+            // );
+
             // Set parent after scaling to avoid any unwanted scale modifications
-            newPos.transform.SetParent(this.transform);
+            currentCard.transform.SetParent(this.transform);
 
-            float xPos = (-handWidth/2 + (i * cardSpacing)) / handWidth;
-            newPos.transform.localPosition = new Vector3(xPos, 0f, -0.1f * i);
-            
-            newPos.GetComponent<CardHandler>().Board = PlayerBoard; 
-            newPos.GetComponent<CardHandler>().enemy = enemy; 
-            newPos.GetComponent<CardHandler>().localScale = newPos.transform.localScale; 
-
-            HandSizePos.Add(newPos);
+            float xPos = (-handWidth / 2 + (i * cardSpacing)) / handWidth;
+            currentCard.transform.localPosition = new Vector3(xPos, 0f, -0.1f * i);
+            currentCard.GetComponent<CardHandler>().localScale = currentCard.transform.localScale;
+            Debug.Log("current Card info " + currentCard.transform.localScale + " - " + currentCard.transform.localPosition);
+            i++;
         }
+    }
+
+    /// <summary>
+    /// Draw a random card from the deck. 
+    /// </summary>
+    /// <returns>Returns a card handler object of the selected card. </returns>
+    private GameObject SelectCard()
+    {
+        if (cards.Count == 0)
+        {
+            return null;
+        }
+
+        // Convert dictionary keys to list for random selection
+        List<GameObject> cardList = new List<GameObject>(cards.Keys);
+
+        // Get random index
+        int randomIndex = Random.Range(0, cardList.Count);
+
+        // Get the randomly selected card
+        GameObject selectedCard = cardList[randomIndex];
+
+        RemoveCardFromDeck(selectedCard);
+        return selectedCard;
     }
 }

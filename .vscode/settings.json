@@ -51,5 +51,38 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "CardGame.sln"
+    "dotnet.defaultSolution": "CardGame.sln",
+        //Terminal Settings
+        "terminal.integrated.fontFamily": "Cascadia Code",
+        "terminal.integrated.fontSize": 16,
+        //Langauge Settings
+        "omnisharp.useModernNet": false,
+        "omnisharp.monoPath": "Latest",
+        "omnisharp.sdkPath": "Latest",
+        // Editor Settings. 
+        "editor.formatOnPaste": true,
+        "editor.formatOnType": true,
+        "editor.cursorStyle": "underline",
+        "editor.cursorBlinking": "expand",
+        "editor.cursorSmoothCaretAnimation": "on",
+        "editor.cursorSurroundingLinesStyle": "all",
+        "editor.formatOnSave": true,
+        "editor.fontFamily": "Cascadia Code",
+        "editor.fontLigatures": true,
+        "editor.smoothScrolling": true,
+        // Workbench Settings.
+        "workbench.editor.highlightModifiedTabs": true,
+        "workbench.editor.pinnedTabSizing": "shrink",
+        "workbench.editor.revealIfOpen": true,
+        "workbench.editor.tabSizing": "fit",
+        "workbench.editor.wrapTabs": true,
+        "workbench.layoutControl.enabled": false,
+        "workbench.list.smoothScrolling": true,
+        "workbench.settings.editor": "json",
+        "workbench.settings.openDefaultKeybindings": true,
+        "workbench.settings.openDefaultSettings": true,
+        "workbench.settings.useSplitJSON": true,
+        "workbench.startupEditor": "readme",
+        "workbench.colorTheme": "Monokai",
+        // Extension Settings. 
 }
