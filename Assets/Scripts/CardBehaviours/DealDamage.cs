@@ -5,24 +5,25 @@ using UnityEngine;
 
 public class DealDamage : CardBehaviour
 {
+    public int damage;
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
 
 
     public override void OnPlay()
     {
-        card.enemy.GetComponent<EnemyController>().health -= 10;
-        isDone = true; 
+        card.enemy.GetComponent<EnemyController>().health -= damage;
+        isDone = true;
     }
 
     public override void OnDiscard()

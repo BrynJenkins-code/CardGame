@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,14 +13,13 @@ public class PlayerController : MonoBehaviour
 
     private List<GameObject> hand = new List<GameObject>();
     [SerializeField] private int handSize;
+    [SerializeField] private GameObject deckPos;
     [SerializeField] private GameObject cardPrefab;  // Renamed for clarity
-
     [SerializeField] private GameObject playerBoard;
     [SerializeField] private GameObject enemy;  // Keep public if game manager needs to set it
-
-
     // Player Stats. 
-    [SerializeField] private int health;
+    [SerializeField] public int health;
+
 
     public int shield;
 
@@ -58,6 +58,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removing a card from the hand. 
+    /// </summary>
+    /// <param name="card"></param>
     public void RemoveCardFromHand(GameObject card)
     {
         if (card != null)
@@ -110,7 +114,7 @@ public class PlayerController : MonoBehaviour
         foreach (GameObject card in deck)
         {
             // This bit is still a bit hard coded. Make a proper deck slot (So we can also hide the top card. )
-            GameObject newCard = GameObject.Instantiate(card, new Vector3(5f, 5f, 0f), Quaternion.identity);
+            GameObject newCard = GameObject.Instantiate(card, deckPos.transform.position, Quaternion.identity);
             newCard.GetComponent<CardHandler>().Board = playerBoard;
             newCard.GetComponent<CardHandler>().enemy = enemy;
 
@@ -139,24 +143,20 @@ public class PlayerController : MonoBehaviour
         float cardWidth = handWidth / (handSize * 1.2f);
         float cardSpacing = cardWidth * 1.5f;
         float scaleMultiplier = cardWidth / originalScale.x;
-
         int i = 0;
+
         foreach (GameObject currentCard in hand)
         {
-            ///This bit stopped working for some reason. Maybe fix?
-            // currentCard.transform.localScale = new Vector3(
-            //     originalScale.x * scaleMultiplier,
-            //     originalScale.y * scaleMultiplier,
-            //     originalScale.z
-            // );
+            // /This bit stopped working for some reason. Maybe fix?
+            currentCard.transform.localScale = new Vector3(
+                originalScale.x * scaleMultiplier,
+                originalScale.y * scaleMultiplier,
+                originalScale.z
+            );
 
-            // Set parent after scaling to avoid any unwanted scale modifications
-            currentCard.transform.SetParent(this.transform);
-
-            float xPos = (-handWidth / 2 + (i * cardSpacing)) / handWidth;
-            currentCard.transform.localPosition = new Vector3(xPos, 0f, -0.1f * i);
+            float xPos = ((-handWidth / 2 + (i * cardSpacing)) / handWidth) * this.transform.localScale.x;
+            currentCard.transform.DOMove(new Vector3(xPos, this.transform.position.y, (-0.1f * i) - 2f), 0.6f);
             currentCard.GetComponent<CardHandler>().localScale = currentCard.transform.localScale;
-            Debug.Log("current Card info " + currentCard.transform.localScale + " - " + currentCard.transform.localPosition);
             i++;
         }
     }

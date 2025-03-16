@@ -1,38 +1,42 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    private enum GameState{
-        PlayerDraw, 
+    private enum GameState
+    {
+        PlayerDraw,
         PlayerTurn,
-        EnemyTurn,  
+        EnemyTurn,
     }
 
     private GameObject EnemyBoard;
-    private GameObject player; 
+    private GameObject player;
     private Dictionary<string, CardHandler> PlayerDeck = new Dictionary<string, CardHandler>();
     private Dictionary<string, CardHandler> EnemyDeck = new Dictionary<string, CardHandler>();
 
-    public float drawTimer; 
-    private float timeRemaining; 
+    public float drawTimer;
+    private float timeRemaining;
     public Slider countdownBar;
+    public TMP_Text healthText;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        SetupGame(); 
-        countdownBar.maxValue = drawTimer; 
-        timeRemaining = drawTimer; 
+        SetupGame();
+        countdownBar.maxValue = drawTimer;
+        timeRemaining = drawTimer;
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateTimer(); 
+        UpdateTimer();
+        healthText.text = player.transform.GetComponent<PlayerController>().health.ToString();
     }
 
     private void SetupGame()
@@ -47,20 +51,20 @@ public class GameManager : MonoBehaviour
     {
 
     }
-    
+
     private void UpdateTimer()
     {
         timeRemaining -= Time.deltaTime;
         if (timeRemaining > 0)
         {
-            countdownBar.value = timeRemaining; 
+            countdownBar.value = timeRemaining;
         }
         else
         {
-            player.GetComponent<PlayerController>().DrawCard(); 
-            timeRemaining = drawTimer; 
+            player.GetComponent<PlayerController>().DrawCard();
+            timeRemaining = drawTimer;
         }
-     
+
     }
 
 }
